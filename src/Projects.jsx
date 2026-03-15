@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
+import AuMembers from "./AuMembers";
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
@@ -125,6 +126,11 @@ export default function Projects() {
           </div>
         );
       })}
+
+      {/* 회원 관리 */}
+      <div style={{ borderTop: "1px solid #1e2130", marginTop: 32, paddingTop: 32 }}>
+        <AuMembers />
+      </div>
     </div>
   );
 }
