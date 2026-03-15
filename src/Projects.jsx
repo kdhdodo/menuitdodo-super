@@ -3,11 +3,7 @@ import { supabase } from "./supabase";
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
-  const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: "", slug: "", url: "", description: "" });
-  const [saving, setSaving] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
   const [assignEmail, setAssignEmail] = useState({});
   const [assignRole, setAssignRole] = useState({});
@@ -17,30 +13,13 @@ export default function Projects() {
 
   async function load() {
     setLoading(true);
-    const [{ data: p }, { data: m }, { data: pm }] = await Promise.all([
+    const [{ data: p }, { data: pm }] = await Promise.all([
       supabase.from("projects").select("*").order("created_at", { ascending: false }),
-      supabase.from("profiles").select("*").order("email"),
       supabase.from("project_members").select("*"),
     ]);
     setProjects(p || []);
-    setMembers(m || []);
     setProjectMembers(pm || []);
     setLoading(false);
-  }
-
-  async function saveProject() {
-    if (!form.name.trim() || !form.slug.trim()) return;
-    setSaving(true);
-    await supabase.from("projects").insert({
-      name: form.name.trim(),
-      slug: form.slug.trim().toLowerCase().replace(/\s+/g, "-"),
-      url: form.url.trim() || null,
-      description: form.description.trim() || null,
-    });
-    setForm({ name: "", slug: "", url: "", description: "" });
-    setShowForm(false);
-    setSaving(false);
-    load();
   }
 
   async function deleteProject(id) {
@@ -68,44 +47,10 @@ export default function Projects() {
 
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-        <div>
-          <div style={{ fontSize: 20, fontWeight: 800, color: "#e8eaf0" }}>프로젝트 관리</div>
-          <div style={{ fontSize: 13, color: "#4a4d5e", marginTop: 4 }}>총 {projects.length}개</div>
-        </div>
-        <button onClick={() => setShowForm(v => !v)}
-          style={{ background: showForm ? "#2a2d3a" : "linear-gradient(135deg,#7c5cfc,#4a9eff)", border: "none", borderRadius: 8, padding: "9px 18px", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-          {showForm ? "취소" : "+ 프로젝트 추가"}
-        </button>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ fontSize: 20, fontWeight: 800, color: "#e8eaf0" }}>프로젝트 관리</div>
+        <div style={{ fontSize: 13, color: "#4a4d5e", marginTop: 4 }}>총 {projects.length}개</div>
       </div>
-
-      {showForm && (
-        <div style={{ background: "#11141c", border: "1px solid #1e2130", borderRadius: 10, padding: "18px 20px", marginBottom: 20 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: "#8890a4", marginBottom: 14 }}>새 프로젝트</div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
-            <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-              placeholder="프로젝트 이름 (예: 매장 운영)"
-              style={{ background: "#0d0f14", border: "1px solid #1e2130", borderRadius: 7, padding: "9px 12px", color: "#e8eaf0", fontSize: 13, outline: "none", fontFamily: "inherit" }} />
-            <input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))}
-              placeholder="슬러그 (예: menuit-admin)"
-              style={{ background: "#0d0f14", border: "1px solid #1e2130", borderRadius: 7, padding: "9px 12px", color: "#e8eaf0", fontSize: 13, outline: "none", fontFamily: "inherit" }} />
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
-            <input value={form.url} onChange={e => setForm(f => ({ ...f, url: e.target.value }))}
-              placeholder="URL (예: https://menuit-admin.vercel.app)"
-              style={{ background: "#0d0f14", border: "1px solid #1e2130", borderRadius: 7, padding: "9px 12px", color: "#e8eaf0", fontSize: 13, outline: "none", fontFamily: "inherit" }} />
-            <input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-              placeholder="설명 (선택)"
-              style={{ background: "#0d0f14", border: "1px solid #1e2130", borderRadius: 7, padding: "9px 12px", color: "#e8eaf0", fontSize: 13, outline: "none", fontFamily: "inherit" }} />
-          </div>
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button onClick={saveProject} disabled={saving || !form.name.trim() || !form.slug.trim()}
-              style={{ background: form.name.trim() && form.slug.trim() ? "linear-gradient(135deg,#7c5cfc,#4a9eff)" : "#2a2d3a", border: "none", borderRadius: 7, padding: "9px 20px", color: form.name.trim() ? "#fff" : "#4a4d5e", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-              {saving ? "저장 중..." : "저장"}
-            </button>
-          </div>
-        </div>
-      )}
 
       {loading ? (
         <div style={{ textAlign: "center", color: "#4a4d5e", fontSize: 13, padding: 40 }}>불러오는 중...</div>
