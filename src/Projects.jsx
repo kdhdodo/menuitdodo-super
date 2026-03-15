@@ -16,6 +16,21 @@ export default function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState(null);
+  const [accessLoading, setAccessLoading] = useState({});
+
+  async function openSite(tempDomain) {
+    setAccessLoading(v => ({ ...v, [tempDomain]: true }));
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await fetch("https://djnsbwsguqirskimukxh.supabase.co/functions/v1/magic-link", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: session.user.email, redirectTo: `https://${tempDomain}` }),
+    });
+    const { link, error } = await res.json();
+    setAccessLoading(v => ({ ...v, [tempDomain]: false }));
+    if (error) { alert("접속 링크 생성 실패: " + error); return; }
+    window.open(link, "_blank");
+  }
 
   useEffect(() => { load(); }, []);
 
@@ -68,8 +83,15 @@ export default function Projects() {
                     </div>
                     <div>
                       <div style={{ fontSize: 11, color: "#4a4d5e", fontWeight: 700, marginBottom: 6 }}>임시 도메인</div>
-                      <a href={`https://${cfg.tempDomain}`} target="_blank" rel="noreferrer"
-                        style={{ fontSize: 13, color: "#4a9eff", textDecoration: "none" }}>{cfg.tempDomain || "—"}</a>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <span style={{ fontSize: 13, color: "#4a9eff" }}>{cfg.tempDomain || "—"}</span>
+                        {p.slug !== "menuit-admin" && cfg.tempDomain && (
+                          <button onClick={() => openSite(cfg.tempDomain)} disabled={accessLoading[cfg.tempDomain]}
+                            style={{ background: "linear-gradient(135deg,#7c5cfc,#4a9eff)", border: "none", borderRadius: 5, padding: "4px 12px", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                            {accessLoading[cfg.tempDomain] ? "..." : "바로 접속"}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                   {!cfg.active && cfg.dnsName && (
