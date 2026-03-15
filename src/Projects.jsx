@@ -3,6 +3,7 @@ import { supabase } from "./supabase";
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
+  const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState(null);
   const [assignEmail, setAssignEmail] = useState({});
@@ -13,12 +14,14 @@ export default function Projects() {
 
   async function load() {
     setLoading(true);
-    const [{ data: p }, { data: pm }] = await Promise.all([
+    const [{ data: p }, { data: pm }, { data: pr }] = await Promise.all([
       supabase.from("projects").select("*").order("created_at", { ascending: false }),
       supabase.from("project_members").select("*"),
+      supabase.from("profiles").select("*").order("email"),
     ]);
     setProjects(p || []);
     setProjectMembers(pm || []);
+    setProfiles(pr || []);
     setLoading(false);
   }
 
@@ -94,9 +97,13 @@ export default function Projects() {
                 ))}
 
                 <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
-                  <input value={assignEmail[p.id] || ""} onChange={e => setAssignEmail(v => ({ ...v, [p.id]: e.target.value }))}
-                    placeholder="이메일로 담당자 추가"
-                    style={{ flex: 1, background: "#0d0f14", border: "1px solid #1e2130", borderRadius: 7, padding: "8px 12px", color: "#e8eaf0", fontSize: 13, outline: "none", fontFamily: "inherit" }} />
+                  <select value={assignEmail[p.id] || ""} onChange={e => setAssignEmail(v => ({ ...v, [p.id]: e.target.value }))}
+                    style={{ flex: 1, background: "#0d0f14", border: "1px solid #1e2130", borderRadius: 7, padding: "8px 12px", color: assignEmail[p.id] ? "#e8eaf0" : "#4a4d5e", fontSize: 13, outline: "none", fontFamily: "inherit" }}>
+                    <option value="">회원 선택</option>
+                    {profiles.filter(pr => !projectMembers.some(pm => pm.project_id === p.id && pm.email === pr.email)).map(pr => (
+                      <option key={pr.id} value={pr.email}>{pr.email}{pr.name ? ` (${pr.name})` : ""}</option>
+                    ))}
+                  </select>
                   <select value={assignRole[p.id] || "admin"} onChange={e => setAssignRole(v => ({ ...v, [p.id]: e.target.value }))}
                     style={{ background: "#0d0f14", border: "1px solid #1e2130", borderRadius: 7, padding: "8px 12px", color: "#e8eaf0", fontSize: 13, outline: "none", fontFamily: "inherit" }}>
                     <option value="admin">관리자</option>
