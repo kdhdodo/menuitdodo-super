@@ -28,7 +28,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div style={{ fontSize: 20, fontWeight: 800, color: "#e8eaf0", marginBottom: 24 }}>대시보드</div>
+      <div style={{ marginBottom: 24 }}></div>
 
       {/* 통계 카드 */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 32 }}>

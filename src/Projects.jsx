@@ -51,8 +51,7 @@ export default function Projects() {
   return (
     <div>
       <div style={{ marginBottom: 24 }}>
-        <div style={{ fontSize: 20, fontWeight: 800, color: "#e8eaf0" }}>프로젝트 관리</div>
-        <div style={{ fontSize: 13, color: "#4a4d5e", marginTop: 4 }}>총 {projects.length}개</div>
+        <div style={{ fontSize: 13, color: "#4a4d5e" }}>총 {projects.length}개</div>
       </div>
 
       {loading ? (

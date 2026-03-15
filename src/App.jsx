@@ -6,7 +6,7 @@ import Dashboard from "./Dashboard";
 
 const TABS = [
   { key: "dashboard", label: "대시보드" },
-  { key: "projects", label: "프로젝트 관리" },
+  { key: "projects", label: "ERP" },
 ];
 
 export default function App() {
