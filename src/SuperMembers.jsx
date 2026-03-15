@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
 
-const roleColor = { admin: "#7c5cfc", admin_user: "#4a9eff", agency_admin: "#f59e0b", agency_user: "#fb923c", store_admin: "#10b981" };
+const roleColor = { admin: "#7c5cfc", admin_user: "#4a9eff", user: "#4a9eff", external: "#10b981", agency_admin: "#f59e0b", agency_user: "#fb923c", store_admin: "#10b981" };
 
 export default function SuperMembers() {
   const [members, setMembers] = useState([]);
@@ -72,6 +72,8 @@ export default function SuperMembers() {
               style={{ background: "#0d0f14", border: "1px solid #1e2130", borderRadius: 6, padding: "7px 10px", color: "#e8eaf0", fontSize: 12, outline: "none", fontFamily: "inherit" }}>
               <option value="admin">관리자</option>
               <option value="admin_user">운영자</option>
+              <option value="user">사용자</option>
+              <option value="external">외부팀</option>
             </select>
             <button onClick={invite} disabled={saving || !form.email.trim()}
               style={{ background: form.email.trim() ? "linear-gradient(135deg,#7c5cfc,#4a9eff)" : "#2a2d3a", border: "none", borderRadius: 6, padding: "7px 14px", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
@@ -98,6 +100,8 @@ export default function SuperMembers() {
                 style={{ background: "transparent", border: `1px solid ${roleColor[m.role] || "#4a4d5e"}`, borderRadius: 4, padding: "2px 7px", color: roleColor[m.role] || "#4a4d5e", fontSize: 11, cursor: "pointer", fontFamily: "inherit" }}>
                 <option value="admin">관리자</option>
                 <option value="admin_user">운영자</option>
+                <option value="user">사용자</option>
+                <option value="external">외부팀</option>
               </select>
             </div>
             <button onClick={() => removeMember(m.id)}
