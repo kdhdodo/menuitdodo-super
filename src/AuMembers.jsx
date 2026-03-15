@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabaseAu } from "./supabaseAu";
 
-const roleLabel = { super_admin: "총관리자", admin: "관리자", agency: "대리점", store: "매장", supporter: "서포터", member: "멤버" };
-const roleColor = { super_admin: "#7c5cfc", admin: "#4a9eff", agency: "#f59e0b", store: "#10b981", supporter: "#ec4899", member: "#8890a4" };
+const roleColor = { admin: "#7c5cfc", admin_user: "#4a9eff", agency_admin: "#f59e0b", agency_user: "#fb923c", store_admin: "#10b981" };
 
 export default function AuMembers() {
   const [members, setMembers] = useState([]);
@@ -76,11 +75,11 @@ export default function AuMembers() {
               style={{ background: "#11141c", border: "1px solid #1e2130", borderRadius: 7, padding: "8px 12px", color: "#e8eaf0", fontSize: 13, outline: "none", fontFamily: "inherit" }} />
             <select value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))}
               style={{ background: "#11141c", border: "1px solid #1e2130", borderRadius: 7, padding: "8px 12px", color: "#e8eaf0", fontSize: 13, outline: "none", fontFamily: "inherit" }}>
-              <option value="member">멤버</option>
-              <option value="supporter">서포터</option>
-              <option value="agency">대리점</option>
-              <option value="store">매장</option>
               <option value="admin">관리자</option>
+              <option value="admin_user">운영자</option>
+              <option value="agency_admin">대리점 관리자</option>
+              <option value="agency_user">대리점 사용자</option>
+              <option value="store_admin">매장 관리자</option>
             </select>
             <button onClick={invite} disabled={saving || !form.email.trim()}
               style={{ background: form.email.trim() ? "linear-gradient(135deg,#7c5cfc,#4a9eff)" : "#2a2d3a", border: "none", borderRadius: 7, padding: "8px 18px", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
@@ -103,14 +102,13 @@ export default function AuMembers() {
             <div style={{ color: "#e8eaf0" }}>{m.email}</div>
             <div style={{ color: "#8890a4" }}>{m.name || "—"}</div>
             <div>
-              <select value={m.role || "member"} onChange={e => changeRole(m.id, e.target.value)}
+              <select value={m.role || "store_admin"} onChange={e => changeRole(m.id, e.target.value)}
                 style={{ background: "transparent", border: `1px solid ${roleColor[m.role] || "#4a4d5e"}`, borderRadius: 5, padding: "3px 8px", color: roleColor[m.role] || "#4a4d5e", fontSize: 12, cursor: "pointer", fontFamily: "inherit" }}>
-                <option value="member">멤버</option>
-                <option value="supporter">서포터</option>
-                <option value="agency">대리점</option>
-                <option value="store">매장</option>
                 <option value="admin">관리자</option>
-                <option value="super_admin">총관리자</option>
+                <option value="admin_user">운영자</option>
+                <option value="agency_admin">대리점 관리자</option>
+                <option value="agency_user">대리점 사용자</option>
+                <option value="store_admin">매장 관리자</option>
               </select>
             </div>
             <button onClick={() => removeMember(m.id)}
