@@ -36,7 +36,7 @@ export default function Projects() {
         const isOpen = expandedId === p.id;
         return (
           <div key={p.id} style={{ background: "#11141c", border: "1px solid #1e2130", borderRadius: 10, marginBottom: 12, overflow: "hidden" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", cursor: "pointer" }} onClick={() => setExpandedId(isOpen ? null : p.id)}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", cursor: p.slug === "menuit-admin" ? "pointer" : "default" }} onClick={() => p.slug === "menuit-admin" && setExpandedId(isOpen ? null : p.id)}>
               <div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: "#e8eaf0" }}>{p.slug === "menuit-admin" ? "호주 매장운영" : p.name}</div>
                 <div style={{ fontSize: 12, color: "#4a4d5e", marginTop: 3 }}>
@@ -44,7 +44,10 @@ export default function Projects() {
                   {p.description && <span style={{ marginLeft: 10 }}>{p.description}</span>}
                 </div>
               </div>
-              <span style={{ color: "#4a4d5e", fontSize: 18 }}>{isOpen ? "▲" : "▼"}</span>
+              {p.slug === "menuit-admin"
+                ? <span style={{ color: "#4a4d5e", fontSize: 18 }}>{isOpen ? "▲" : "▼"}</span>
+                : <span style={{ background: "rgba(139,139,139,0.15)", color: "#8890a4", borderRadius: 5, padding: "3px 10px", fontSize: 12, fontWeight: 600 }}>준비중</span>
+              }
             </div>
 
             {isOpen && (
