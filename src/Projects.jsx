@@ -38,7 +38,7 @@ export default function Projects() {
           <div key={p.id} style={{ background: "#11141c", border: "1px solid #1e2130", borderRadius: 10, marginBottom: 12, overflow: "hidden" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", cursor: "pointer" }} onClick={() => setExpandedId(isOpen ? null : p.id)}>
               <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: "#e8eaf0" }}>{p.name}</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: "#e8eaf0" }}>{p.slug === "menuit-admin" ? "호주 매장운영" : p.name}</div>
                 <div style={{ fontSize: 12, color: "#4a4d5e", marginTop: 3 }}>
                   {p.url ? <a href={p.url} target="_blank" rel="noreferrer" style={{ color: "#4a9eff", textDecoration: "none" }} onClick={e => e.stopPropagation()}>{p.url}</a> : "URL 미등록"}
                   {p.description && <span style={{ marginLeft: 10 }}>{p.description}</span>}
