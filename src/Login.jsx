@@ -17,7 +17,7 @@ export default function Login() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0d0f14", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Noto Sans KR', sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#0d0f14", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif" }}>
       <form onSubmit={login} style={{ background: "#11141c", border: "1px solid #1e2130", borderRadius: 14, padding: "40px 36px", width: 360, boxSizing: "border-box" }}>
         <div style={{ fontSize: 22, fontWeight: 800, color: "#e8eaf0", marginBottom: 6 }}>메뉴잇 Super Admin</div>
         <div style={{ fontSize: 13, color: "#4a4d5e", marginBottom: 32 }}>총 관리자 전용 로그인</div>

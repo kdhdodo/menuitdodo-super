@@ -38,7 +38,7 @@ export default function App() {
   }, []);
 
   if (loading) return (
-    <div style={{ minHeight: "100vh", background: "#0d0f14", display: "flex", alignItems: "center", justifyContent: "center", color: "#4a4d5e", fontFamily: "'Noto Sans KR', sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#0d0f14", display: "flex", alignItems: "center", justifyContent: "center", color: "#4a4d5e", fontFamily: "'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif" }}>
       로딩 중...
     </div>
   );
@@ -46,7 +46,7 @@ export default function App() {
   if (!session) return <Login />;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0d0f14", fontFamily: "'Noto Sans KR', sans-serif", color: "#e8eaf0" }}>
+    <div style={{ minHeight: "100vh", background: "#0d0f14", fontFamily: "'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif", color: "#e8eaf0" }}>
       {/* Header */}
       <div style={{ background: "#11141c", borderBottom: "1px solid #1e2130", padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
