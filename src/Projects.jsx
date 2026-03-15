@@ -46,7 +46,6 @@ export default function Projects() {
               <div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: "#e8eaf0" }}>
                   {p.slug === "menuit-admin" ? "호주 매장운영" : p.name}
-                  {cfg.active && <span style={{ marginLeft: 8, background: "rgba(0,200,100,0.15)", color: "#00c864", borderRadius: 4, padding: "2px 8px", fontSize: 11, fontWeight: 600 }}>운영중</span>}
                 </div>
                 <div style={{ fontSize: 12, color: "#4a4d5e", marginTop: 3 }}>
                   {cfg.officialDomain && <span style={{ color: "#7c5cfc", marginRight: 10 }}>{cfg.officialDomain}</span>}
