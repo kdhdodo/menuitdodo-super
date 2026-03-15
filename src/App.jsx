@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
 import Login from "./Login";
-import Members from "./Members";
 import Projects from "./Projects";
+import Dashboard from "./Dashboard";
 
 const TABS = [
+  { key: "dashboard", label: "대시보드" },
   { key: "projects", label: "프로젝트 관리" },
-  { key: "members", label: "회원 관리" },
 ];
 
 export default function App() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState("projects");
+  const [tab, setTab] = useState("dashboard");
   const [showPwModal, setShowPwModal] = useState(false);
   const [pw, setPw] = useState({ new: "", confirm: "" });
   const [pwMsg, setPwMsg] = useState("");
@@ -107,8 +107,8 @@ export default function App() {
 
       {/* Content */}
       <div style={{ maxWidth: 1000, margin: "0 auto", padding: "32px 24px" }}>
+        {tab === "dashboard" && <Dashboard />}
         {tab === "projects" && <Projects />}
-        {tab === "members" && <Members />}
       </div>
     </div>
   );
