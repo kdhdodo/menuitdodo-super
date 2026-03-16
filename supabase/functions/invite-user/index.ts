@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    const { action, email, role, userId, redirectTo } = await req.json();
+    const { action, email, name, role, userId, redirectTo } = await req.json();
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
@@ -31,11 +31,13 @@ Deno.serve(async (req) => {
 
       // profiles 저장
       if (data?.user?.id) {
-        await supabase.from("profiles").upsert({
+        const profileData: Record<string, unknown> = {
           id:    data.user.id,
           email: email,
-          role:  role || "user",
-        }, { onConflict: "id" });
+          role:  role || "member",
+        };
+        if (name) profileData.name = name;
+        await supabase.from("profiles").upsert(profileData, { onConflict: "id" });
       }
 
       // Resend 이메일 발송

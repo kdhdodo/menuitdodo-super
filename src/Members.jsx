@@ -50,16 +50,19 @@ export default function Members() {
     });
   }
 
+  const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqbnNid3NndXFpcnNraW11a3hoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1Njg3MzEsImV4cCI6MjA4OTE0NDczMX0.PkHZQsAUVzOj6c6NaEgvyfPcF6e1m7JbnNTta7ZaNjQ";
+
   async function invite() {
     if (!form.email.trim()) return;
     setSaving(true);
     setError("");
-    const { error } = await supabase.auth.admin.inviteUserByEmail(form.email.trim());
-    if (error) {
-      setError(error.message);
-      setSaving(false);
-      return;
-    }
+    const res = await fetch("https://djnsbwsguqirskimukxh.supabase.co/functions/v1/invite-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "apikey": ANON_KEY, "Authorization": `Bearer ${ANON_KEY}` },
+      body: JSON.stringify({ action: "invite", email: form.email.trim(), name: form.name.trim() || undefined, role: form.role }),
+    });
+    const json = await res.json();
+    if (json.error) { setError(json.error); setSaving(false); return; }
     setForm({ email: "", name: "", role: "member" });
     setShowInvite(false);
     setSaving(false);
