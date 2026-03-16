@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
       const { data, error } = await supabase.auth.admin.generateLink({
         type: "invite",
         email,
-        options: { redirectTo: redirectTo || "https://a-ip.menuit.io" },
+        options: { redirectTo: redirectTo || "https://a-my.menuit.io" },
       });
       if (error) throw error;
 
