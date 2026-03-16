@@ -76,7 +76,11 @@ export default function Members() {
 
   async function removeMember(id) {
     if (!confirm("이 회원을 삭제하시겠습니까?")) return;
-    await supabase.auth.admin.deleteUser(id);
+    await fetch("https://djnsbwsguqirskimukxh.supabase.co/functions/v1/invite-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "apikey": ANON_KEY, "Authorization": `Bearer ${ANON_KEY}` },
+      body: JSON.stringify({ action: "delete", userId: id }),
+    });
     load();
   }
 
