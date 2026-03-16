@@ -5,11 +5,11 @@ import SuperMembers from "./SuperMembers";
 
 const PROJECT_CONFIG = {
   "menuit-admin":  { officialDomain: "au.menuit.io",    tempDomain: "menuitdodo-admin.vercel.app",  dnsName: "au",    active: true },
-  "menuit-ip":     { officialDomain: "ip.menuit.io",    tempDomain: "menuitdodo-ip.vercel.app",     dnsName: "ip" },
-  "menuit-fi":     { officialDomain: "fi.menuit.io",    tempDomain: "menuitdodo-fi.vercel.app",     dnsName: "fi" },
-  "menuit-scm":    { officialDomain: "scm.menuit.io",   tempDomain: "menuitdodo-scm.vercel.app",    dnsName: "scm" },
-  "menuit-sales":  { officialDomain: "sales.menuit.io", tempDomain: "menuitdodo-sales.vercel.app",  dnsName: "sales" },
-  "menuit-fn":     { officialDomain: "fn.menuit.io",    tempDomain: "menuitdodo-fn.vercel.app",     dnsName: "fn" },
+  "menuit-ip":     { officialDomain: "a-ip.menuit.io",    tempDomain: "menuitdodo-ip.vercel.app",     dnsName: "ip" },
+  "menuit-fi":     { officialDomain: "a-fi.menuit.io",    tempDomain: "menuitdodo-fi.vercel.app",     dnsName: "fi" },
+  "menuit-scm":    { officialDomain: "a-scm.menuit.io",   tempDomain: "menuitdodo-scm.vercel.app",    dnsName: "scm" },
+  "menuit-sales":  { officialDomain: "a-sales.menuit.io", tempDomain: "menuitdodo-sales.vercel.app",  dnsName: "sales" },
+  "menuit-fn":     { officialDomain: "a-fn.menuit.io",    tempDomain: "menuitdodo-fn.vercel.app",     dnsName: "fn" },
 };
 
 export default function Projects() {
