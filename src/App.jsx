@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
 import Login from "./Login";
 import Projects from "./Projects";
+import Members from "./Members";
 
 const TABS = [
   { key: "projects", label: "ERP" },
+  { key: "members",  label: "팀원 관리" },
 ];
 
 export default function App() {
@@ -106,6 +108,7 @@ export default function App() {
       {/* Content */}
       <div style={{ maxWidth: 1000, margin: "0 auto", padding: "32px 24px" }}>
         {tab === "projects" && <Projects />}
+        {tab === "members"  && <Members />}
       </div>
     </div>
   );

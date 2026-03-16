@@ -1,26 +1,53 @@
 import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
 
+const BYTES = [
+  { key: "ip",    name: "특허",     color: "#7c5cfc" },
+  { key: "fi",    name: "파이낸스", color: "#4a9eff" },
+  { key: "fn",    name: "마케팅",   color: "#f59e0b" },
+  { key: "scm",   name: "공급망",   color: "#10b981" },
+  { key: "sales", name: "영업",     color: "#ff5050" },
+];
+
 export default function Members() {
   const [members, setMembers] = useState([]);
-  const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showInvite, setShowInvite] = useState(false);
   const [form, setForm] = useState({ email: "", name: "", role: "member" });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
+  const [byteMap, setByteMap] = useState({}); // { userId: Set<byteKey> }
+
   useEffect(() => { load(); }, []);
 
   async function load() {
     setLoading(true);
-    const [{ data: m }, { data: p }] = await Promise.all([
+    const [{ data: m }, { data: bm }] = await Promise.all([
       supabase.from("profiles").select("*").order("created_at", { ascending: false }),
-      supabase.from("projects").select("*").order("name"),
+      supabase.from("byte_members").select("*"),
     ]);
     setMembers(m || []);
-    setProjects(p || []);
+    const map = {};
+    for (const row of (bm || [])) {
+      if (!map[row.user_id]) map[row.user_id] = new Set();
+      map[row.user_id].add(row.byte_key);
+    }
+    setByteMap(map);
     setLoading(false);
+  }
+
+  async function toggleByte(userId, byteKey, currentlyOn) {
+    if (currentlyOn) {
+      await supabase.from("byte_members").delete().eq("user_id", userId).eq("byte_key", byteKey);
+    } else {
+      await supabase.from("byte_members").insert({ user_id: userId, byte_key: byteKey });
+    }
+    setByteMap(prev => {
+      const next = { ...prev, [userId]: new Set(prev[userId] || []) };
+      currentlyOn ? next[userId].delete(byteKey) : next[userId].add(byteKey);
+      return next;
+    });
   }
 
   async function invite() {
@@ -50,7 +77,6 @@ export default function Members() {
     load();
   }
 
-  const roleLabel = { super_admin: "총관리자", admin: "관리자", member: "멤버" };
   const roleColor = { super_admin: "#7c5cfc", admin: "#4a9eff", member: "#8890a4" };
 
   return (
@@ -94,19 +120,17 @@ export default function Members() {
       )}
 
       <div style={{ background: "#11141c", border: "1px solid #1e2130", borderRadius: 10, overflow: "hidden" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 2fr auto", padding: "12px 16px", borderBottom: "1px solid #1e2130", fontSize: 12, color: "#4a4d5e", fontWeight: 700 }}>
-          <div>이메일</div><div>이름</div><div>권한</div><div>프로젝트 담당</div><div></div>
+        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 3fr auto", padding: "12px 16px", borderBottom: "1px solid #1e2130", fontSize: 12, color: "#4a4d5e", fontWeight: 700 }}>
+          <div>이메일</div><div>이름</div><div>권한</div><div>바이트</div><div></div>
         </div>
         {loading ? (
           <div style={{ padding: 32, textAlign: "center", color: "#4a4d5e", fontSize: 13 }}>불러오는 중...</div>
         ) : members.length === 0 ? (
           <div style={{ padding: 32, textAlign: "center", color: "#4a4d5e", fontSize: 13 }}>회원이 없습니다</div>
         ) : members.map(m => {
-          const myProjects = projects.filter(p =>
-            p.members?.some?.(pm => pm.id === m.id) || false
-          );
+          const memberBytes = byteMap[m.id] || new Set();
           return (
-            <div key={m.id} style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 2fr auto", padding: "14px 16px", borderBottom: "1px solid #1e2130", alignItems: "center", fontSize: 13 }}>
+            <div key={m.id} style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 3fr auto", padding: "14px 16px", borderBottom: "1px solid #1e2130", alignItems: "center", fontSize: 13 }}>
               <div style={{ color: "#e8eaf0" }}>{m.email}</div>
               <div style={{ color: "#8890a4" }}>{m.name || "—"}</div>
               <div>
@@ -117,7 +141,17 @@ export default function Members() {
                   <option value="super_admin">총관리자</option>
                 </select>
               </div>
-              <div style={{ color: "#4a4d5e", fontSize: 12 }}>—</div>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {BYTES.map(b => {
+                  const on = memberBytes.has(b.key);
+                  return (
+                    <button key={b.key} onClick={() => toggleByte(m.id, b.key, on)}
+                      style={{ fontSize: 11, fontWeight: 700, padding: "3px 9px", borderRadius: 5, cursor: "pointer", border: `1px solid ${on ? b.color : "#1e2130"}`, background: on ? b.color + "22" : "transparent", color: on ? b.color : "#4a4d5e" }}>
+                      {b.name}
+                    </button>
+                  );
+                })}
+              </div>
               <button onClick={() => removeMember(m.id)}
                 style={{ background: "rgba(255,80,80,0.1)", border: "1px solid rgba(255,80,80,0.2)", color: "#ff5050", borderRadius: 5, padding: "4px 10px", fontSize: 12, cursor: "pointer" }}>
                 삭제
